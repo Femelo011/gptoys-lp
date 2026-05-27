@@ -1624,6 +1624,20 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 // ── CONFIG ──
 // Em deploy com build, injete um bloco "window.GPTOYS_CONFIG = { ... }" antes deste script.
 // Sem build, basta editar os valores aqui antes de publicar.
+
+// ── Captura UTMs da URL ──────────────────────────────────────────
+function getUTMs() {
+  const p = new URLSearchParams(window.location.search);
+  return {
+    utm_source:   p.get('utm_source')   || '',
+    utm_medium:   p.get('utm_medium')   || '',
+    utm_campaign: p.get('utm_campaign') || '',
+    utm_content:  p.get('utm_content')  || '',
+    utm_term:     p.get('utm_term')     || ''
+  };
+}
+const utms = getUTMs();
+
 const CONFIG = Object.assign({
   LEAD_ENDPOINT_URL: '/api/lead',
   WHATSAPP_NUMBER: '5521966827441' // só dígitos, com DDI (55) + DDD (21) + número
@@ -1744,7 +1758,12 @@ fetch('https://hook.us1.make.celonis.com/ty6vmbd7v1fxiydtuhpgb0p917cbnhzr', {
     prazo:           payload.prazo,
     orcamento:       payload.orcamento,
     classificacao:   payload.classificacao,
-    data_hora:       new Date().toLocaleString('pt-BR', { timeZone: 'America/Sao_Paulo' })
+    data_hora:       new Date().toLocaleString('pt-BR', { timeZone: 'America/Sao_Paulo' }),
+    utm_source:   utms.utm_source,
+    utm_medium:   utms.utm_medium,
+    utm_campaign: utms.utm_campaign,
+    utm_content:  utms.utm_content,
+    utm_term:     utms.utm_term
   })
 }).catch(() => {});
 // ── GTM: dispara evento lead_enviado ─────────────────────────────
